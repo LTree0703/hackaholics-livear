@@ -9,14 +9,22 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@neondatabase/serverless": "^1.0.2",
+    "@paralleldrive/cuid2": "^3.0.4",
+    "@prisma/client": "^6.19.0",
+    "dotenv": "^17.2.3",
     "next": "16.0.3",
+    "pg": "^8.16.3",
+    "postgres": "^3.4.7",
     "react": "19.2.0",
-    "react-dom": "19.2.0"
+    "react-dom": "19.2.0",
+    "server-only": "^0.0.1"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
     "eslint": "^9",
     "eslint-config-next": "16.0.3",
+    "prisma": "^6.19.0",
     "tailwindcss": "^4"
   }
 }
