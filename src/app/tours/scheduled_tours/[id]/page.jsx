@@ -80,7 +80,6 @@ const extendedTourDetails = {
       ]
     }
   },
-  // Add more tour details as needed...
 };
 
 // Basic tour data that matches the scheduled_tours page
