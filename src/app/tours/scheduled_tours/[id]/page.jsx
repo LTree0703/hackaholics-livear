@@ -5,6 +5,8 @@ import { useState, useEffect, use } from "react";
 import { useRouter } from "next/navigation";
 import { fetchTour, updateTour } from "../../../../lib/tour.js";
 import { createBooking } from "../../../../lib/booking.js";
+import { useUser } from "@clerk/nextjs";
+import { getOrCreateUser } from "../../../../lib/user.js";
 
 // Extended tour details with more comprehensive information
 const extendedTourDetails = {
@@ -225,6 +227,8 @@ export default function TourDetailPage({ params }) {
   const [extendedDetails, setExtendedDetails] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  const { user } = useUser();
+
   useEffect(() => {
     const loadTours = async () => {
       try {
@@ -285,11 +289,13 @@ export default function TourDetailPage({ params }) {
   const handleConfirmEnrollment = async () => {
     setIsEnrolling(true);
     try {
-      // Hardcoded userId for now
-      const hardcodedUserId = "73e10fd1-8447-42ab-b661-c7805969389e";
+      const fetchedUser = await getOrCreateUser(
+        user.emailAddresses[0].emailAddress,
+        user.id
+      );
 
       // Create booking
-      await createBooking(hardcodedUserId, tourId, 1);
+      await createBooking(fetchedUser.id, tourId, 1);
 
       // Update tour to decrease availableSeats
       await updateTour(tourId);

@@ -24,15 +24,16 @@ export async function deleteUser(userId) {
   await sql`DELETE FROM "User" WHERE id = ${userId}`;
 }
 
-async function main() {
-  const userData = [
-    {
-      email: "pakninlpn@gmail.com",
-      googleId: "pakninlpn@gmail.com",
-    },
-  ];
-
-  await createUsers(userData);
+export async function getOrCreateUser(email, googleId) {
+  console.log("Fetching or creating user with Google ID:", googleId);
+  let users = await sql`SELECT * FROM "User" WHERE "googleId" = ${googleId}`;
+  if (users.length > 0) {
+    console.log("User found:", users[0]);
+    return users[0];
+  }
+  const id = randomUUID();
+  await sql`INSERT INTO "User" (id, email, "googleId") VALUES (${id}, ${email}, ${googleId})`;
+  users = await sql`SELECT * FROM "User" WHERE id = ${id}`;
+  console.log("User created:", users[0]);
+  return users[0];
 }
-
-main();

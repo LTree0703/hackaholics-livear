@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { fetchTours } from "../../../lib/tour.js";
-import ProtectedRoute from "../auth/ProtectedRoute";
+import ProtectedRoute from "../../auth/ProtectedRoute.js";
 
 export default function ScheduledToursPage() {
   const [scheduledTours, setScheduledTours] = useState([]);
