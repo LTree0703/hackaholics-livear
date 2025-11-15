@@ -19,6 +19,7 @@ export default function DemoView() {
     });
     const videoRef = useRef(null);
     const containerRef = useRef(null);
+    const preloadedVideos = useRef({});
 
     const landscapeTimestamps = [
         {
@@ -27,7 +28,7 @@ export default function DemoView() {
             time_end: "0:21",
             x_percent: 0.4,
             y_percent: 0.2,
-            video_path: "https://www.youtube.com/watch?v=nYZUX1qAX1Y",
+            video_path: "/2.mp4",
         },
         {
             title: "Mid Levels",
@@ -43,7 +44,7 @@ export default function DemoView() {
             time_end: "0:26",
             x_percent: 0.9,
             y_percent: 0.8,
-            video_path: "https://www.youtube.com/watch?v=_q18-Ehrlag",
+            video_path: "/3.mov",
         },
         {
             title: "Kowloon",
@@ -51,7 +52,7 @@ export default function DemoView() {
             time_end: "1:05",
             x_percent: 0.5,
             y_percent: 0.75,
-            video_path: "https://www.youtube.com/watch?v=9vtKEy8dxUQ",
+            video_path: "/4.mov",
         },
         {
             title: "Hong Kong Island near Victoria Harbour",
@@ -59,7 +60,7 @@ export default function DemoView() {
             time_end: "0:40",
             x_percent: 0.5,
             y_percent: 0.4,
-            video_path: "https://www.youtube.com/watch?v=7rLnWlzvGYk",
+            video_path: "/5.mov",
         },
         {
             title: "Chaiwan",
@@ -67,7 +68,7 @@ export default function DemoView() {
             time_end: "1:21",
             x_percent: 0.5,
             y_percent: 0.6,
-            video_path: "https://www.youtube.com/watch?v=2m7twvbCEzo",
+            video_path: "/6.mp4",
         },
         {
             title: "Victoria Peak",
@@ -75,7 +76,7 @@ export default function DemoView() {
             time_end: "1:41",
             x_percent: 0.5,
             y_percent: 0.5,
-            video_path: "https://www.youtube.com/shorts/6lrqs-jCqmo",
+            video_path: "/7.mp4",
         },
         {
             title: "Victoria Harbour",
@@ -83,7 +84,7 @@ export default function DemoView() {
             time_end: "1:52",
             x_percent: 0.5,
             y_percent: 0.8,
-            video_path: "https://www.youtube.com/watch?v=53mBGprmXRY",
+            video_path: "/8.mp4",
         },
         {
             title: "Mid Levels",
@@ -91,9 +92,45 @@ export default function DemoView() {
             time_end: "2:00",
             x_percent: 0.4,
             y_percent: 0.7,
-            video_path: "https://www.youtube.com/watch?v=hZgGDB_kxB4",
+            video_path: "/1.mp4",
         },
     ];
+
+    // Preload local videos
+    useEffect(() => {
+        const localVideos = [
+            "/1.mp4", "/2.mp4", "/6.mp4", "/7.mp4", "/8.mp4", "/3.mov", "/4.mov", "/5.mov"
+        ];
+
+        const videosRef = preloadedVideos.current;
+
+        localVideos.forEach(videoPath => {
+            if (!videosRef[videoPath]) {
+                const video = document.createElement('video');
+                video.src = videoPath;
+                video.preload = 'metadata'; // Changed from 'auto' to 'metadata'
+                video.muted = true;
+                video.crossOrigin = 'anonymous';
+                
+                // Add error handling
+                video.addEventListener('error', (e) => {
+                    console.warn(`Failed to preload video: ${videoPath}`, e);
+                });
+                
+                videosRef[videoPath] = video;
+            }
+        });
+
+        return () => {
+            // Cleanup preloaded videos on unmount
+            Object.values(videosRef).forEach(video => {
+                if (video instanceof HTMLVideoElement) {
+                    video.removeEventListener('error', () => {});
+                    video.src = '';
+                }
+            });
+        };
+    }, []);
 
     const handleRestart = () => {
         if (videoRef.current) {
@@ -584,6 +621,7 @@ export default function DemoView() {
                         <button
                             onClick={() => {
                                 setActiveButton("landmarks");
+                                setSelectedPin(null);
                             }}
                             className={`px-4 py-2 rounded-md text-sm font-semibold transition-all cursor-pointer ${activeButton === "landmarks"
                                     ? "bg-emerald-800 text-emerald-100 shadow-lg"
