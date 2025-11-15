@@ -9,6 +9,14 @@ export default function DemoView() {
     const [currentTime, setCurrentTime] = useState(0);
     const [selectedPin, setSelectedPin] = useState(null);
     const [isFullscreen, setIsFullscreen] = useState(false);
+    const [flightData, setFlightData] = useState({
+        temperature: 11.5,
+        windSpeed: 15,
+        speed: 35,
+        eta: 52 * 60, // 52 minutes in seconds
+        speedUnit: 'kph',
+        direction: 0 // degrees, 0 = North
+    });
     const videoRef = useRef(null);
     const containerRef = useRef(null);
 
@@ -191,6 +199,46 @@ export default function DemoView() {
         return () => clearInterval(interval);
     }, []);
 
+    // Update flight data continuously
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setFlightData(prev => ({
+                ...prev,
+                // Temperature varies between 10-13°C
+                temperature: 10 + Math.random() * 3,
+                // Wind speed varies between 12-18 mph
+                windSpeed: 12 + Math.random() * 6,
+                // Speed varies between 20-50 kph/mph
+                speed: 20 + Math.random() * 30,
+                // Toggle between kph and mph every few updates
+                speedUnit: Math.random() > 0.7 ? (prev.speedUnit === 'kph' ? 'mph' : 'kph') : prev.speedUnit,
+                // Direction between -90° (left) and 90° (right)
+                direction: -90 + Math.random() * 180
+            }));
+        }, 2000); // Update every 2 seconds
+
+        return () => clearInterval(interval);
+    }, []);
+
+    // ETA countdown (decreases by 1 minute every 3 seconds)
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setFlightData(prev => ({
+                ...prev,
+                eta: Math.max(0, prev.eta - 60) // Decrease by 60 seconds (1 minute)
+            }));
+        }, 3000); // Every 3 seconds
+
+        return () => clearInterval(interval);
+    }, []);
+
+    // Format ETA to MM:SS
+    const formatETA = (seconds) => {
+        const minutes = Math.floor(seconds / 60);
+        const remainingSeconds = seconds % 60;
+        return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+    };
+
 
 
     if (!isLandscape) {
@@ -241,7 +289,7 @@ export default function DemoView() {
             {/* Video Background Layer */}
             <video
                 ref={videoRef}
-                className="absolute inset-0 w-full h-full object-cover"
+                className="absolute inset-0 w-full h-full object-cover" 
                 src="https://cdn.hatimquetta.com/misc/demo_hk.mp4"
                 autoPlay
                 loop
@@ -337,6 +385,81 @@ export default function DemoView() {
                 </div>
             )}
             
+            {/* Flight Information Panel - only when flightpath is active */}
+            {activeButton === 'flightpath' && (
+                <div className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-black/60 backdrop-blur-sm text-white p-4 rounded-lg shadow-2xl pointer-events-auto animate-fadeIn max-w-xs opacity-90">
+                    <h3 className="text-emerald-300 font-bold text-lg mb-3 flex items-center gap-2">
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                        </svg>
+                        Flight Data {flightData.direction.toFixed(0)}°
+                    </h3>
+                    
+                    <div className="space-y-3 text-sm">
+                        {/* Weather */}
+                        <div className="flex justify-between items-center">
+                            <div className="flex items-center gap-2">
+                                <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" />
+                                </svg>
+                                <span className="text-gray-300">Weather:</span>
+                            </div>
+                            <div className="text-right">
+                                <div className="mb-1">{flightData.temperature.toFixed(1)}°C</div>
+                                <div className="text-xs text-gray-400">Fog, 70% rain</div>
+                            </div>
+                        </div>
+
+                        {/* Speed */}
+                        <div className="flex justify-between items-center">
+                            <div className="flex items-center gap-2">
+                                <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                                </svg>
+                                <span className="text-gray-300">Speed:</span>
+                            </div>
+                            <span className="text-emerald-300 font-semibold">
+                                {flightData.speed.toFixed(0)} {flightData.speedUnit}
+                            </span>
+                        </div>
+
+                        {/* ETA */}
+                        <div className="flex justify-between items-center">
+                            <div className="flex items-center gap-2">
+                                <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                <span className="text-gray-300">ETA:</span>
+                            </div>
+                            <span className="text-yellow-300 font-semibold">
+                                {formatETA(flightData.eta)}
+                            </span>
+                        </div>
+
+                        {/* Wind Speed */}
+                        <div className="flex justify-between items-center">
+                            <div className="flex items-center gap-2">
+                                <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h1m4 0h1" />
+                                </svg>
+                                <span className="text-gray-300">Wind:</span>
+                            </div>
+                            <span className="text-blue-300">
+                                {flightData.windSpeed.toFixed(1)} mph
+                            </span>
+                        </div>
+                    </div>
+
+                    {/* Status indicator */}
+                    <div className="mt-3 pt-3 border-t border-gray-600">
+                        <div className="flex items-center gap-2">
+                            <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                            <span className="text-xs text-gray-300">Flight on schedule</span>
+                        </div>
+                    </div>
+                </div>
+            )}
+            
             {/* Debug Info - remove after testing */}
             {activeButton === 'landmarks' && (
                 <div className="absolute top-20 left-4 bg-black/70 text-white p-2 text-xs rounded pointer-events-none">
@@ -369,6 +492,64 @@ export default function DemoView() {
                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                             allowFullScreen
                         />
+                    </div>
+                </div>
+            )}
+
+            {/* Flight Direction Arrow - only when flightpath is active */}
+            {activeButton === 'flightpath' && (
+                <div className="absolute bottom-20 right-1/2 transform translate-x-1/2 pointer-events-auto animate-fadeIn opacity-80">
+                    <div className="flex flex-col items-center">
+                        <div 
+                            className="transition-transform duration-1000 ease-in-out"
+                            style={{ transform: `rotate(${flightData.direction}deg)` }}
+                        >
+                            <svg 
+                                className="w-40 h-40 text-emerald-400 drop-shadow-lg" 
+                                fill="currentColor" 
+                                viewBox="0 0 24 24"
+                            >
+                                <path d="M12 2 L8 10 L12 8 L16 10 Z" />
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Compass - only when flightpath is active */}
+            {activeButton === 'flightpath' && (
+                <div className="absolute bottom-20 right-8 pointer-events-auto animate-fadeIn">
+                    <div className="relative w-20 h-20 bg-black/60 backdrop-blur-sm rounded-full border-2 border-emerald-400/50">
+                        {/* Compass Rose */}
+                        <div 
+                            className="absolute inset-0 transition-transform duration-1000 ease-in-out"
+                            style={{ transform: `rotate(${-flightData.direction}deg)` }}
+                        >
+                            {/* North */}
+                            <div className="absolute top-1 left-1/2 transform -translate-x-1/2 text-white text-xs font-bold">
+                                N
+                            </div>
+                            {/* South */}
+                            <div className="absolute bottom-1 left-1/2 transform -translate-x-1/2 text-white text-xs font-bold">
+                                S
+                            </div>
+                            {/* East */}
+                            <div className="absolute right-1 top-1/2 transform -translate-y-1/2 text-white text-xs font-bold">
+                                E
+                            </div>
+                            {/* West */}
+                            <div className="absolute left-1 top-1/2 transform -translate-y-1/2 text-white text-xs font-bold">
+                                W
+                            </div>
+                        </div>
+                        
+                        {/* Center dot */}
+                        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-2 h-2 bg-emerald-400 rounded-full"></div>
+                        
+                        {/* Direction indicator (fixed red line pointing up) */}
+                        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                            <div className="w-0.5 h-6 bg-red-500 transform -translate-y-6"></div>
+                        </div>
                     </div>
                 </div>
             )}
