@@ -1,3 +1,5 @@
+"use client";
+
 import DemoView from "../../components/demo/DemoView";
 import ProtectedRoute from "../auth/ProtectedRoute";
 
