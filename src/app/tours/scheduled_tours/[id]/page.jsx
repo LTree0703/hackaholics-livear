@@ -148,6 +148,7 @@ export default function TourDetailPage({ params }) {
   const router = useRouter();
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [isEnrolling, setIsEnrolling] = useState(false);
+  const [showSuccessDialog, setShowSuccessDialog] = useState(false);
   
   // Unwrap the params Promise using React.use()
   const resolvedParams = use(params);
@@ -183,8 +184,43 @@ export default function TourDetailPage({ params }) {
     setTimeout(() => {
       setIsEnrolling(false);
       setShowConfirmation(false);
-      alert('🎉 Enrollment successful! You will receive a confirmation email shortly.');
-    }, 2000);
+      setShowSuccessDialog(true);
+    }, 1000);
+  };
+
+  const handleSaveQRCode = () => {
+    // Create a canvas element to draw the QR code
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = 400;
+    canvas.height = 400;
+    
+    // Set background
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, 400, 400);
+    
+    // Draw a simple QR-like pattern (for demo purposes)
+    ctx.fillStyle = '#000000';
+    const size = 10;
+    for (let i = 0; i < 40; i++) {
+      for (let j = 0; j < 40; j++) {
+        if ((i + j) % 3 === 0 || (i % 5 === 0 && j % 7 === 0)) {
+          ctx.fillRect(i * size, j * size, size, size);
+        }
+      }
+    }
+    
+    // Convert to image and download
+    canvas.toBlob((blob) => {
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `livear-tour-${tourId}-qr-code.png`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    });
   };
 
   const formatDate = (dateString) => {
@@ -507,7 +543,6 @@ export default function TourDetailPage({ params }) {
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
           <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl p-8 border border-gray-700 max-w-md w-full">
             <div className="text-center">
-              <div className="text-6xl mb-4">🚁</div>
               <h3 className="text-2xl font-bold text-white mb-4">Confirm Enrollment</h3>
               <p className="text-gray-300 mb-6">
                 Are you sure you want to enroll in <span className="text-emerald-400 font-semibold">"{tour.title}"</span> for <span className="text-emerald-400 font-semibold">${tour.price}</span>?
@@ -546,6 +581,78 @@ export default function TourDetailPage({ params }) {
                 >
                   {isEnrolling ? 'Processing...' : 'Confirm'}
                 </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Success Dialog with QR Code */}
+      {showSuccessDialog && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+          <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl p-6 border border-gray-700 max-w-md w-full max-h-[66vh]">
+            {/* Close Button */}
+            <div className="flex justify-end mb-3">
+              <button
+                onClick={() => setShowSuccessDialog(false)}
+                className="text-gray-400 hover:text-white transition-colors"
+              >
+                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            <div className="text-center mb-4">
+              <h3 className="text-2xl font-bold text-white mb-3">Enrollment Successful! 🎉</h3>
+
+              {/* QR Code */}
+              <div className="bg-white rounded-xl p-4 mb-4 mx-auto max-w-xs">
+                <div className="text-center mb-3">
+                  <h4 className="text-base font-bold text-gray-800 mb-1">Your Boarding Pass</h4>
+                  <p className="text-xs text-gray-600">Scan this QR code at the helipad</p>
+                </div>
+                
+                {/* QR Code Pattern (Demo) */}
+                <div className="bg-white border-2 border-gray-200 rounded-lg p-3 mx-auto w-32 h-32">
+                  <div className="grid grid-cols-10 gap-px h-full">
+                    {Array.from({ length: 100 }).map((_, index) => {
+                      const row = Math.floor(index / 10);
+                      const col = index % 10;
+                      const isBlack = (row + col) % 3 === 0 || (row % 4 === 0 && col % 5 === 0) || 
+                                     (row < 2 && col < 2) || (row < 2 && col > 7) || (row > 7 && col < 2);
+                      return (
+                        <div
+                          key={index}
+                          className={`w-full h-full ${isBlack ? 'bg-black' : 'bg-white'}`}
+                        />
+                      );
+                    })}
+                  </div>
+                </div>
+                
+                <div className="mt-3 text-xs text-gray-600">
+                  <p>Booking ID: LA{tourId}25{Date.now().toString().slice(-6)}</p>
+                  <p>{formatDate(tour.date)} • {formatTime(tour.time)}</p>
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="space-y-2">
+                <button
+                  onClick={handleSaveQRCode}
+                  className="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-semibold py-2.5 px-4 rounded-lg transition-all duration-300 flex items-center justify-center gap-2 text-sm"
+                >
+                  <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                  Save QR Code
+                </button>
+                
+                {/* <div className="text-xs text-gray-400 space-y-1">
+                  <p>Confirmation email sent to your inbox</p>
+                  <p>SMS reminders 24 hours before flight</p>
+                </div> */}
               </div>
             </div>
           </div>

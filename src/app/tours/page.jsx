@@ -27,7 +27,6 @@ export default function ToursPage() {
             <Link href="/tours/scheduled_tours" className="group">
               <div className="bg-gradient-to-br from-gray-800/60 to-gray-900/60 backdrop-blur-lg rounded-2xl p-8 border border-gray-700/50 hover:border-emerald-500/30 transition-all duration-500 hover:shadow-2xl hover:shadow-emerald-500/10 transform hover:scale-105">
                 <div className="text-center">
-                  <div className="text-6xl mb-4">🚁</div>
                   <h2 className="text-2xl font-bold text-white mb-4 group-hover:text-emerald-400 transition-colors">
                     Scheduled Tours
                   </h2>
@@ -67,7 +66,6 @@ export default function ToursPage() {
             <Link href="/tours/custom_tours" className="group">
               <div className="bg-gradient-to-br from-gray-800/60 to-gray-900/60 backdrop-blur-lg rounded-2xl p-8 border border-gray-700/50 hover:border-blue-500/30 transition-all duration-500 hover:shadow-2xl hover:shadow-blue-500/10 transform hover:scale-105">
                 <div className="text-center">
-                  <div className="text-6xl mb-4">✨</div>
                   <h2 className="text-2xl font-bold text-white mb-4 group-hover:text-blue-400 transition-colors">
                     Custom Tours
                   </h2>
