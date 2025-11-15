@@ -1,6 +1,15 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Link from "next/link";
+import {
+  ClerkProvider,
+  SignInButton,
+  SignUpButton,
+  SignedIn,
+  SignedOut,
+  UserButton,
+} from "@clerk/nextjs";
+import "./globals.css";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -14,44 +23,49 @@ const geistMono = Geist_Mono({
 
 export const metadata = {
   title: "LiveAR - eVTOL Sky Tours | Electric Aviation Experience",
-  description: "Experience the future of urban aviation with LiveAR's cutting-edge eVTOL aircraft. Book scheduled tours, custom flights, or try our AR demo. Zero emissions, electric powered, safety certified.",
+  description:
+    "Experience the future of urban aviation with LiveAR's cutting-edge eVTOL aircraft. Book scheduled tours, custom flights, or try our AR demo. Zero emissions, electric powered, safety certified.",
 };
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <nav className="bg-emerald-800 text-emerald-100 px-6 py-4 h-16">
-          <div className="container mx-auto flex justify-between items-center">
-            <div className="text-xl font-semibold">
-              LiveAR Cathay
+    <ClerkProvider>
+      <html lang="en">
+        <body
+          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        >
+          <nav className="bg-emerald-800 text-emerald-100 px-6 py-4 h-16">
+            <div className="container mx-auto flex justify-between items-center">
+              <div className="text-xl font-semibold">LiveAR Cathay</div>
+              <div className="flex gap-6">
+                <Link href="/" className="hover:text-white transition-colors">
+                  Home
+                </Link>
+                <Link
+                  href="/tours"
+                  className="hover:text-white transition-colors"
+                >
+                  Tours
+                </Link>
+                <Link
+                  href="/demo"
+                  className="hover:text-white transition-colors"
+                >
+                  Demo
+                </Link>
+              </div>
             </div>
-            <div className="flex gap-6">
-              <Link href="/" className="hover:text-white transition-colors">
-                Home
-              </Link>
-              <Link href="/tours" className="hover:text-white transition-colors">
-                Tours
-              </Link>
-              <Link href="/demo" className="hover:text-white transition-colors">
-                Demo
-              </Link>
+          </nav>
+
+          <main className="min-h-[calc(100vh-8rem)]">{children}</main>
+
+          <footer className="bg-emerald-800 text-emerald-100 px-6 flex items-center h-16">
+            <div className="container mx-auto text-center">
+              <p>&copy; 2025 LiveAR Cathay. All rights reserved.</p>
             </div>
-          </div>
-        </nav>
-        
-        <main className="min-h-[calc(100vh-8rem)]">
-          {children}
-        </main>
-        
-        <footer className="bg-emerald-800 text-emerald-100 px-6 flex items-center h-16">
-          <div className="container mx-auto text-center">
-            <p>&copy; 2025 LiveAR Cathay. All rights reserved.</p>
-          </div>
-        </footer>
-      </body>
-    </html>
+          </footer>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }
