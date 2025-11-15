@@ -51,19 +51,6 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-slate-900 to-black text-white overflow-hidden">
-      {/* Interactive Background */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div
-          className="absolute w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl transition-all duration-1000 ease-out"
-          style={{
-            left: mousePosition.x - 200,
-            top: mousePosition.y - 200,
-          }}
-        />
-        <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-emerald-400/5 rounded-full blur-2xl animate-pulse" />
-        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-emerald-600/5 rounded-full blur-2xl animate-pulse delay-1000" />
-      </div>
-
       {/* Hero Section */}
       <section className="relative z-10 pt-20 pb-16 px-6">
         <div className="container mx-auto max-w-6xl">
