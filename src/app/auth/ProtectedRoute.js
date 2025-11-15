@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 export default function ProtectedRoute({ children }) {
   const { isSignedIn, isLoaded } = useUser();
   if (!isLoaded) {
-    return <LoadingComponent />;
+    return null;
   }
   if (!isSignedIn) {
     redirect(`/sign-in`);
