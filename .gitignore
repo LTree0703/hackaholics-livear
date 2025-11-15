@@ -44,3 +44,6 @@ next-env.d.ts
 /public/demo_hk.mp4
 
 /src/generated/prisma
+
+# clerk configuration (can include secrets)
+/.clerk/
