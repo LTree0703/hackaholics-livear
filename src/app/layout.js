@@ -1,5 +1,6 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import Link from "next/link";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -22,7 +23,34 @@ export default function RootLayout({ children }) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        <nav className="bg-emerald-800 text-emerald-100 px-6 py-4 h-16">
+          <div className="container mx-auto flex justify-between items-center">
+            <div className="text-xl font-semibold">
+              LiveAR Cathay
+            </div>
+            <div className="flex gap-6">
+              <Link href="/" className="hover:text-white transition-colors">
+                Home
+              </Link>
+              <Link href="/tours" className="hover:text-white transition-colors">
+                Tours
+              </Link>
+              <Link href="/demo" className="hover:text-white transition-colors">
+                Demo
+              </Link>
+            </div>
+          </div>
+        </nav>
+        
+        <main className="min-h-[calc(100vh-8rem)]">
+          {children}
+        </main>
+        
+        <footer className="bg-emerald-800 text-emerald-100 px-6 flex items-center h-16">
+          <div className="container mx-auto text-center">
+            <p>&copy; 2025 LiveAR Cathay. All rights reserved.</p>
+          </div>
+        </footer>
       </body>
     </html>
   );
