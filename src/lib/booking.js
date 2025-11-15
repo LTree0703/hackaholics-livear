@@ -1,10 +1,10 @@
 "use server";
 
 import { sql } from "./server.js";
-import { createId } from "@paralleldrive/cuid2";
+import { randomUUID } from "crypto";
 
 export async function createBooking(userId, tourId, numPeople) {
-  const id = createId();
+  const id = randomUUID();
   console.log("Generated Booking ID:", id);
   await sql`INSERT INTO "Booking" (id, "userId", "tourId", "numPeople") VALUES (${id}, ${userId}, ${tourId}, ${numPeople})`;
   return id;

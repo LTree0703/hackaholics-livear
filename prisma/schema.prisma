@@ -15,27 +15,32 @@ datasource db {
 }
 
 model User {
-  id       String    @id @default(cuid())
+  id       String    @id @default(uuid())
   email    String    @unique
+  googleId String?   @unique
   bookings Booking[]
 }
 
 model Tour {
-  id            String    @id @default(cuid())
-  name          String
-  description   String
-  price         Float
-  time          DateTime
-  quota         Int
-  duration      Float
-  startLocation String
-  endLocation   String
-  isFull        Boolean   @default(false)
-  bookings      Booking[]
+  id             String    @id @default(uuid())
+  title          String
+  description    String
+  price          Float
+  date           DateTime
+  time           String
+  duration       String
+  totalSeats     Int
+  availableSeats Int      @default(0) 
+  imageUrl       String?
+  highlights     String[]
+  difficulty     String
+  weather        String
+  extendedDetails Json?    // <-- store itinerary, inclusions, restrictions, coordinates, etc.
+  bookings       Booking[]
 }
 
 model Booking {
-  id        String   @id @default(cuid())
+  id        String   @id @default(uuid())
   user      User     @relation(fields: [userId], references: [id])
   userId    String
   tour      Tour     @relation(fields: [tourId], references: [id])

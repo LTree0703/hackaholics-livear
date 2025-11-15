@@ -1,11 +1,11 @@
 "use server";
 
 import { sql } from "./server.js";
-import { createId } from "@paralleldrive/cuid2";
+import { randomUUID } from "crypto";
 
 export async function createUsers(userData) {
   for (const u of userData) {
-    const id = createId();
+    const id = randomUUID();
     console.log("Generated ID:", id);
     await sql`INSERT INTO "User" (id, email) VALUES (${id}, ${u.email})`;
   }
