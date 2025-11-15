@@ -185,6 +185,10 @@ export default function DemoView() {
                 loop
                 muted
                 playsInline
+                style={activeButton === '1970s' ? {
+                    filter: 'sepia(0.8) brightness(0.9) contrast(1.1) saturate(0.7) blur(1px)',
+                    imageRendering: 'pixelated'
+                } : {}}
             />
 
             {/* Pins Layer - only when landmarks is active */}
@@ -192,7 +196,7 @@ export default function DemoView() {
                 <div className="absolute inset-0 pointer-events-none">
                     {getActivePins().map((pin, index) => (
                         <div
-                            key={`${pin.title}-${index}`}
+                            key={`${pin.title}-${index}`}   
                             className="absolute pointer-events-auto animate-fadeIn cursor-pointer"
                             style={{
                                 left: `${pin.x_percent * 100}%`,
