@@ -35,7 +35,7 @@ export default function DemoView() {
             time_end: "0:28",
             x_percent: 0.3,
             y_percent: 0.8,
-            video_path: "https://www.youtube.com/watch?v=hZgGDB_kxB4",
+            video_path: "/1.mp4",
         },
         {
             title: "Wanchai",
@@ -110,7 +110,7 @@ export default function DemoView() {
 
     // Get active pins based on current video time
     const getActivePins = () => {
-        if (activeButton !== 'landmarks') return [];
+        if (activeButton !== 'landmarks' && activeButton !== '1970s') return [];
         return landscapeTimestamps.filter(pin => {
             const start = timeToSeconds(pin.time_start);
             const end = timeToSeconds(pin.time_end);
@@ -357,8 +357,8 @@ export default function DemoView() {
                 </svg>
             </div>
 
-            {/* Pins Layer - only when landmarks is active */}
-            {activeButton === 'landmarks' && (
+            {/* Pins Layer - only when landmarks or 1970s is active */}
+            {(activeButton === 'landmarks' || activeButton === '1970s') && (
                 <div className="absolute inset-0 pointer-events-none">
                     {getActivePins().map((pin, index) => (
                         <div
@@ -484,14 +484,32 @@ export default function DemoView() {
                         </button>
                     </div>
                     {/* Video */}
-                    <div className="aspect-video">
-                        <iframe
-                            className="w-full h-full"
-                            src={`${selectedPin.video_path.replace('watch?v=', 'embed/').replace('shorts/', 'embed/')}?autoplay=1&loop=1&playlist=${selectedPin.video_path.split('v=')[1] || selectedPin.video_path.split('/').pop()}`}
-                            title={selectedPin.title}
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                            allowFullScreen
-                        />
+                    <div 
+                        className="aspect-video"
+                        style={activeButton === '1970s' ? {
+                            filter: 'sepia(0.8) brightness(0.9) contrast(1.1) saturate(0.7)',
+                            imageRendering: 'pixelated'
+                        } : {}}
+                    >
+                        {selectedPin.video_path.includes('youtube.com') || selectedPin.video_path.includes('youtu.be') ? (
+                            <iframe
+                                className="w-full h-full"
+                                src={`${selectedPin.video_path.replace('watch?v=', 'embed/').replace('shorts/', 'embed/')}?autoplay=1&loop=1&controls=0&showinfo=0&rel=0&modestbranding=1&playlist=${selectedPin.video_path.split('v=')[1] || selectedPin.video_path.split('/').pop()}`}
+                                title={selectedPin.title}
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowFullScreen
+                            />
+                        ) : (
+                            <video
+                                className="w-full h-full object-cover"
+                                src={selectedPin.video_path}
+                                autoPlay
+                                loop
+                                muted
+                                playsInline
+                                controls={false}
+                            />
+                        )}
                     </div>
                 </div>
             )}
