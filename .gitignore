@@ -42,3 +42,8 @@ next-env.d.ts
 
 # large video files
 /public/demo_hk.mp4
+
+/src/generated/prisma
+
+# clerk configuration (can include secrets)
+/.clerk/
