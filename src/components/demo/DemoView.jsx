@@ -498,12 +498,12 @@ export default function DemoView() {
             )}
             
             {/* Debug Info - remove after testing */}
-            {activeButton === 'landmarks' && (
+            {/* {activeButton === 'landmarks' && (
                 <div className="absolute top-20 left-4 bg-black/70 text-white p-2 text-xs rounded pointer-events-none">
                     <div>Current Time: {currentTime.toFixed(2)}s</div>
                     <div>Active Pins: {getActivePins().length}</div>
                 </div>
-            )}
+            )} */}
 
             {/* Video Popup */}
             {selectedPin && (
