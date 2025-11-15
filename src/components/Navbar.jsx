@@ -8,7 +8,7 @@ export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <nav className="bg-emerald-800 text-emerald-100 px-6 py-4 h-16">
+    <nav className="bg-emerald-800 text-emerald-100 px-6 py-4 h-16 relative z-50">
       <div className="container mx-auto flex justify-between items-center">
         <div className="text-xl font-semibold">LiveAR</div>
         
@@ -35,7 +35,7 @@ export default function Navbar() {
           </SignedIn>
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="text-emerald-100 hover:text-white transition-colors"
+            className="text-emerald-100 hover:text-white transition-colors cursor-pointer"
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={isMenuOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"} />
@@ -46,8 +46,8 @@ export default function Navbar() {
 
       {/* Mobile Menu */}
       {isMenuOpen && (
-        <div className="md:hidden mt-4 pb-4 border-t border-emerald-700">
-          <div className="flex flex-col gap-3 pt-4">
+        <div className="md:hidden absolute top-full left-0 right-0 bg-emerald-800 border-t border-emerald-700 z-50">
+          <div className="flex flex-col gap-3 py-4 px-6">
             <Link 
               href="/" 
               className="hover:text-white transition-colors"

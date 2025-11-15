@@ -225,7 +225,7 @@ export default function DemoView() {
             {/* Fullscreen Button */}
             <button
                 onClick={toggleFullscreen}
-                className="absolute top-4 right-4 z-50 bg-black/50 text-white p-2 rounded-lg hover:bg-black/70 transition-colors"
+                className="absolute top-4 right-4 z-40 bg-black/50 text-white p-2 rounded-lg hover:bg-black/70 transition-colors cursor-pointer"
             >
                 {isFullscreen ? (
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -247,6 +247,7 @@ export default function DemoView() {
                 loop
                 muted
                 playsInline
+                disablePictureInPicture
                 style={activeButton === '1970s' ? {
                     filter: 'sepia(0.8) brightness(0.9) contrast(1.1) saturate(0.7) blur(1px)',
                     imageRendering: 'pixelated'
@@ -352,7 +353,7 @@ export default function DemoView() {
                         <h3 className="text-emerald-100 font-semibold text-sm">{selectedPin.title}</h3>
                         <button
                             onClick={closePopup}
-                            className="text-emerald-100 hover:text-white transition-colors"
+                            className="text-emerald-100 hover:text-white transition-colors cursor-pointer"
                         >
                             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -385,7 +386,7 @@ export default function DemoView() {
                             onClick={() => {
                                 setActiveButton("landmarks");
                             }}
-                            className={`px-4 py-2 rounded-md text-sm font-semibold transition-all ${activeButton === "landmarks"
+                            className={`px-4 py-2 rounded-md text-sm font-semibold transition-all cursor-pointer ${activeButton === "landmarks"
                                     ? "bg-emerald-800 text-emerald-100 shadow-lg"
                                     : "bg-white/80 text-emerald-800 hover:bg-white"
                                 }`}>
@@ -396,7 +397,7 @@ export default function DemoView() {
                                 setActiveButton("1970s");
                                 setSelectedPin(null);
                             }}
-                            className={`px-4 py-2 rounded-md text-sm font-semibold transition-all ${activeButton === "1970s"
+                            className={`px-4 py-2 rounded-md text-sm font-semibold transition-all cursor-pointer ${activeButton === "1970s"
                                     ? "bg-emerald-800 text-emerald-100 shadow-lg"
                                     : "bg-white/80 text-emerald-800 hover:bg-white"
                                 }`}>
@@ -407,7 +408,7 @@ export default function DemoView() {
                                 setActiveButton("flightpath");
                                 setSelectedPin(null);
                             }}
-                            className={`px-4 py-2 rounded-md text-sm font-semibold transition-all ${activeButton === "flightpath"
+                            className={`px-4 py-2 rounded-md text-sm font-semibold transition-all cursor-pointer ${activeButton === "flightpath"
                                     ? "bg-emerald-800 text-emerald-100 shadow-lg"
                                     : "bg-white/80 text-emerald-800 hover:bg-white"
                                 }`}>
@@ -416,7 +417,7 @@ export default function DemoView() {
                         <div className="w-px h-8 bg-gray-400/50 mx-1" />
                         <button
                             onClick={handleRestart}
-                            className="px-4 py-2 rounded-md text-sm font-semibold transition-all bg-white/80 text-emerald-800 hover:bg-white flex items-center gap-2">
+                            className="px-4 py-2 rounded-md text-sm font-semibold transition-all bg-white/80 text-emerald-800 hover:bg-white flex items-center gap-2 cursor-pointer">
                             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path
                                     strokeLinecap="round"

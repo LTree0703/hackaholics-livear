@@ -110,7 +110,7 @@ const HelipadMap = () => {
                   </div>
                 </div>
                 <div className="mt-3 pt-2 border-t border-gray-200">
-                  <button className="w-full bg-emerald-600 hover:bg-emerald-700 text-white text-xs py-2 px-3 rounded-lg transition-colors">
+                  <button className="w-full bg-emerald-600 hover:bg-emerald-700 text-white text-xs py-2 px-3 rounded-lg transition-colors cursor-pointer">
                     Select for Tours
                   </button>
                 </div>
