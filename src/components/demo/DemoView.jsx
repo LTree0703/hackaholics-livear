@@ -119,16 +119,29 @@ export default function DemoView() {
     };
 
     const toggleFullscreen = async () => {
-        if (!document.fullscreenElement) {
+        if (!document.fullscreenElement && !document.webkitFullscreenElement) {
             try {
-                await containerRef.current.requestFullscreen();
+                const element = containerRef.current;
+                if (element.requestFullscreen) {
+                    await element.requestFullscreen();
+                } else if (element.webkitRequestFullscreen) {
+                    // Safari iOS support
+                    await element.webkitRequestFullscreen();
+                } else if (element.webkitEnterFullscreen) {
+                    // iOS Safari video fullscreen
+                    await element.webkitEnterFullscreen();
+                }
                 setIsFullscreen(true);
             } catch (error) {
                 console.error('Error entering fullscreen:', error);
             }
         } else {
             try {
-                await document.exitFullscreen();
+                if (document.exitFullscreen) {
+                    await document.exitFullscreen();
+                } else if (document.webkitExitFullscreen) {
+                    await document.webkitExitFullscreen();
+                }
                 setIsFullscreen(false);
             } catch (error) {
                 console.error('Error exiting fullscreen:', error);
@@ -138,11 +151,15 @@ export default function DemoView() {
 
     useEffect(() => {
         const handleFullscreenChange = () => {
-            setIsFullscreen(!!document.fullscreenElement);
+            setIsFullscreen(!!(document.fullscreenElement || document.webkitFullscreenElement));
         };
 
         document.addEventListener('fullscreenchange', handleFullscreenChange);
-        return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
+        document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+        return () => {
+            document.removeEventListener('fullscreenchange', handleFullscreenChange);
+            document.removeEventListener('webkitfullscreenchange', handleFullscreenChange);
+        };
     }, []);
 
     useEffect(() => {
@@ -236,42 +253,6 @@ export default function DemoView() {
                 } : {}}
             />
 
-            {/* Pins Layer - only when landmarks is active */}
-            {activeButton === 'landmarks' && (
-                <div className="absolute inset-0 pointer-events-none">
-                    {getActivePins().map((pin, index) => (
-                        <div
-                            key={`${pin.title}-${index}`}   
-                            className="absolute pointer-events-auto animate-fadeIn cursor-pointer"
-                            style={{
-                                left: `${pin.x_percent * 100}%`,
-                                top: `${pin.y_percent * 100}%`,
-                                transform: 'translate(-50%, -100%)'
-                            }}
-                            onClick={() => handlePinClick(pin)}
-                        >
-                            {/* Pin marker */}
-                            <div className="flex flex-col items-center">
-                                <svg className="w-8 h-8 text-emerald-800 drop-shadow-lg" viewBox="0 0 24 24" fill="currentColor">
-                                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
-                                </svg>
-                                <span className="text-xs font-semibold text-emerald-900 bg-white/90 px-2 py-1 rounded shadow-lg mt-1 whitespace-nowrap">
-                                    {pin.title}
-                                </span>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            )}
-            
-            {/* Debug Info - remove after testing */}
-            {activeButton === 'landmarks' && (
-                <div className="absolute top-20 left-4 bg-black/70 text-white p-2 text-xs rounded pointer-events-none">
-                    <div>Current Time: {currentTime.toFixed(2)}s</div>
-                    <div>Active Pins: {getActivePins().length}</div>
-                </div>
-            )}
-
             {/* Airplane Window Overlay */}
             <div className="absolute inset-0 pointer-events-none">
                 <svg className="w-full h-full" preserveAspectRatio="none">
@@ -326,6 +307,42 @@ export default function DemoView() {
                     />
                 </svg>
             </div>
+
+            {/* Pins Layer - only when landmarks is active */}
+            {activeButton === 'landmarks' && (
+                <div className="absolute inset-0 pointer-events-none">
+                    {getActivePins().map((pin, index) => (
+                        <div
+                            key={`${pin.title}-${index}`}   
+                            className="absolute pointer-events-auto animate-fadeIn cursor-pointer"
+                            style={{
+                                left: `${pin.x_percent * 100}%`,
+                                top: `${pin.y_percent * 100}%`,
+                                transform: 'translate(-50%, -100%)'
+                            }}
+                            onClick={() => handlePinClick(pin)}
+                        >
+                            {/* Pin marker */}
+                            <div className="flex flex-col items-center">
+                                <svg className="w-8 h-8 text-emerald-800 drop-shadow-lg" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                                </svg>
+                                <span className="text-xs font-semibold text-emerald-900 bg-white/90 px-2 py-1 rounded shadow-lg mt-1 whitespace-nowrap">
+                                    {pin.title}
+                                </span>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            )}
+            
+            {/* Debug Info - remove after testing */}
+            {activeButton === 'landmarks' && (
+                <div className="absolute top-20 left-4 bg-black/70 text-white p-2 text-xs rounded pointer-events-none">
+                    <div>Current Time: {currentTime.toFixed(2)}s</div>
+                    <div>Active Pins: {getActivePins().length}</div>
+                </div>
+            )}
 
             {/* Video Popup */}
             {selectedPin && (
