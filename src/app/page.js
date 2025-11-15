@@ -2,6 +2,20 @@
 
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import dynamic from 'next/dynamic';
+
+// Dynamically import the map component to avoid SSR issues
+const HelipadMapComponent = dynamic(() => import('../components/HelipadMap'), {
+  ssr: false,
+  loading: () => (
+    <div className="w-full h-96 bg-gradient-to-br from-gray-700/50 to-gray-800/50 rounded-2xl flex items-center justify-center">
+      <div className="text-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-400 mx-auto mb-4"></div>
+        <p className="text-gray-300">Loading Hong Kong Helipad Map...</p>
+      </div>
+    </div>
+  )
+});
 
 export default function Home() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
@@ -60,7 +74,7 @@ export default function Home() {
             </p>
 
             {/* eVTOL Visual Representation */}
-            <div className="relative mb-12">
+            <div className="relative py-12">
               <div className="flex justify-center items-center">
                 <div className="relative">
                   {/* eVTOL Body */}
@@ -90,84 +104,13 @@ export default function Home() {
               
               {/* Flying Animation Path */}
               <div className="absolute top-1/2 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-emerald-400/30 to-transparent"></div>
-            </div>
-
-            {/* AR Immersive Experience Showcase */}
-            <div className="bg-gradient-to-r from-gray-800/60 to-gray-900/60 backdrop-blur-lg rounded-2xl p-8 border border-emerald-500/20">
-              <h2 className="text-2xl md:text-3xl font-bold text-center mb-6 text-emerald-400">
-                🚁 IMMERSIVE AR EXPERIENCE 🚁
-              </h2>
-              <div className="grid md:grid-cols-2 gap-8 items-center">
-                <div className="space-y-4">
-                  <div className="flex items-center gap-3">
-                    <div className="w-3 h-3 bg-emerald-400 rounded-full animate-pulse"></div>
-                    <span className="text-gray-200">AR Windows highlighting landmarks in real-time</span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <div className="w-3 h-3 bg-emerald-400 rounded-full animate-pulse delay-100"></div>
-                    <span className="text-gray-200">Interactive flight path visualization</span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <div className="w-3 h-3 bg-emerald-400 rounded-full animate-pulse delay-200"></div>
-                    <span className="text-gray-200">Digital scenery overlays on window views</span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <div className="w-3 h-3 bg-emerald-400 rounded-full animate-pulse delay-300"></div>
-                    <span className="text-gray-200">Historical stories and city insights</span>
-                  </div>
-                </div>
-                <div className="relative">
-                  <div className="bg-gray-700/50 rounded-lg p-4 border-2 border-emerald-500/30">
-                    <div className="text-emerald-400 text-sm mb-2">AR Window View</div>
-                    <div className="bg-gradient-to-b from-blue-900/30 to-gray-800/50 rounded h-32 relative overflow-hidden">
-                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-emerald-400/10 to-transparent animate-pulse"></div>
-                      <div className="absolute bottom-2 left-2 text-xs text-emerald-300">📍 City Hall - Built 1889</div>
-                      <div className="absolute top-2 right-2 text-xs text-emerald-300">🗺️ Route: Downtown</div>
-                      <div className="absolute center-4 center-4 w-2 h-2 bg-emerald-400 rounded-full animate-bounce"></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Features Grid */}
-            {/* <div className="grid md:grid-cols-3 gap-8 mb-16 max-w-4xl mx-auto">
-              <div className="bg-gray-800/50 backdrop-blur-sm border border-gray-700/50 rounded-xl p-6 hover:border-emerald-500/50 transition-all duration-300 hover:scale-105">
-                <div className="w-12 h-12 bg-emerald-500 rounded-lg flex items-center justify-center mb-4 mx-auto">
-                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                </div>
-                <h3 className="text-xl font-semibold mb-2 text-emerald-400">Scheduled Tours</h3>
-                <p className="text-gray-300 text-sm">Join curated low-altitude flights with AR-guided storytelling and landmark discovery.</p>
-              </div>
-
-              <div className="bg-gray-800/50 backdrop-blur-sm border border-gray-700/50 rounded-xl p-6 hover:border-emerald-500/50 transition-all duration-300 hover:scale-105">
-                <div className="w-12 h-12 bg-emerald-500 rounded-lg flex items-center justify-center mb-4 mx-auto">
-                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-                  </svg>
-                </div>
-                <h3 className="text-xl font-semibold mb-2 text-emerald-400">Custom Tours</h3>
-                <p className="text-gray-300 text-sm">Design personalized routes with AR experiences tailored to your interests and destinations.</p>
-              </div>
-
-              <div className="bg-gray-800/50 backdrop-blur-sm border border-gray-700/50 rounded-xl p-6 hover:border-emerald-500/50 transition-all duration-300 hover:scale-105">
-                <div className="w-12 h-12 bg-emerald-500 rounded-lg flex items-center justify-center mb-4 mx-auto">
-                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122" />
-                  </svg>
-                </div>
-                <h3 className="text-xl font-semibold mb-2 text-emerald-400">AR Magic</h3>
-                <p className="text-gray-300 text-sm">Revolutionary AR windows transform your view with interactive overlays and immersive storytelling.</p>
-              </div>
-            </div> */}
           </div>
         </div>
+      </div>
       </section>
 
       {/* Immersive Experience Details */}
-      <section className="relative z-10 py-16 px-6">
+      <section className="relative z-10 mb-16 px-6">
         <div className="container mx-auto max-w-6xl">
           <div className="text-center mb-12">
             <h2 className="text-4xl md:text-5xl font-bold mb-4 text-white">
@@ -252,52 +195,213 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Call to Action Section */}
+      {/* Book Your Experience Section */}
       <section className="relative z-10 pb-20 px-6">
-        <div className="container mx-auto max-w-4xl text-center">
-          <div className="bg-gradient-to-r from-gray-800/80 to-gray-900/80 backdrop-blur-lg rounded-3xl p-8 md:p-12 border border-gray-700/50 shadow-2xl">
-            <h2 className="text-3xl md:text-4xl font-bold mb-6 text-white">
-              Ready for an <span className="text-emerald-400">Immersive Flight</span>?
+        <div className="container mx-auto max-w-6xl">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 text-white">
+              Choose Your <span className="text-emerald-400">AR Flight Experience</span>
             </h2>
-            <p className="text-gray-300 text-lg mb-10 max-w-2xl mx-auto">
-              Step into the future of urban tourism. Our AR-enhanced eVTOLs offer intimate low-altitude flights 
-              where every window becomes a portal to discovery. Book your immersive journey or experience our AR demo first.
+            <p className="text-xl text-gray-300 max-w-3xl mx-auto mb-8">
+              Step into the future of urban tourism with our AR-enhanced eVTOL flights. 
+              Select the experience that fits your adventure style.
             </p>
+          </div>
 
-            {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
-              <Link
-                href="/tours"
-                className="group relative overflow-hidden bg-emerald-600 hover:bg-emerald-500 text-white font-semibold py-4 px-8 rounded-xl transition-all duration-300 transform hover:scale-105 hover:shadow-lg hover:shadow-emerald-500/25 w-full sm:w-auto"
-              >
-                <span className="relative z-10 flex items-center justify-center gap-3">
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                  </svg>
-                  Book AR Flight Experience
-                </span>
-                <div className="absolute inset-0 bg-gradient-to-r from-emerald-400 to-emerald-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-              </Link>
-
-              <Link
-                href="/demo"
-                className="group relative overflow-hidden bg-transparent border-2 border-emerald-500 text-emerald-400 hover:text-white font-semibold py-4 px-8 rounded-xl transition-all duration-300 transform hover:scale-105 w-full sm:w-auto"
-              >
-                <span className="relative z-10 flex items-center justify-center gap-3">
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
-                  </svg>
-                  Try AR Demo
-                </span>
-                <div className="absolute inset-0 bg-emerald-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-              </Link>
-            </div>
-
-            {/* Additional Info */}
-            <div className="mt-10 pt-8 border-t border-gray-700/50">
-              <p className="text-gray-400 text-sm">
-                🚁 Low-altitude flights • 🔮 AR-enhanced windows • 🌆 Immersive city tours • 🔋 Zero emissions • 🛡️ Safety certified
+          {/* Hong Kong Helipad Map */}
+          <div className="mb-16">
+            <div className="text-center mb-8">
+              <h3 className="text-3xl font-bold text-white mb-4">
+                <span className="text-emerald-400">Helipad Network</span> Across Hong Kong
+              </h3>
+              <p className="text-lg text-gray-300 max-w-2xl mx-auto">
+                Explore our extensive network of 20 helipads strategically located across Hong Kong. 
+                Click on any red marker to view helipad details and available tour options.
               </p>
+            </div>
+            
+            <div className="relative">
+              {/* Map Container with Dynamic Import */}
+              <div className="bg-gradient-to-r from-gray-800/60 to-gray-900/60 backdrop-blur-lg rounded-2xl p-6 border border-emerald-500/30">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-4 h-4 bg-red-500 rounded-full"></div>
+                    <span className="text-gray-300 text-sm">Active Helipad Locations</span>
+                  </div>
+                  <div className="text-emerald-400 text-sm font-medium">
+                    20 Locations Available
+                  </div>
+                </div>
+                
+                {/* Map will be rendered here */}
+                <HelipadMapComponent />
+                
+                <div className="mt-4 grid grid-cols-2 md:grid-cols-4 gap-4 text-xs text-gray-400">
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 bg-emerald-400 rounded-full"></div>
+                    <span>Commercial Hubs</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
+                    <span>Scenic Locations</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 bg-purple-400 rounded-full"></div>
+                    <span>Cultural Sites</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 bg-yellow-400 rounded-full"></div>
+                    <span>Nature Reserves</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Tour Options Grid */}
+          <div className="grid lg:grid-cols-3 gap-8 mb-12">
+            {/* Scheduled Tours */}
+            <Link href="/tours/scheduled_tours" className="group">
+              <div className="h-full bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-lg rounded-2xl p-8 border border-gray-700/50 hover:border-emerald-500/50 transition-all duration-500 hover:scale-105 hover:shadow-2xl hover:shadow-emerald-500/10">
+                <div className="w-16 h-16 bg-emerald-500 rounded-2xl flex items-center justify-center mb-6 mx-auto group-hover:bg-emerald-400 transition-colors duration-300">
+                  <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <h3 className="text-2xl font-bold mb-4 text-emerald-400 text-center group-hover:text-emerald-300 transition-colors">Scheduled Tours</h3>
+                <p className="text-gray-300 text-center mb-6 leading-relaxed">
+                  Join our expertly curated flights. Perfect for first-time visitors with pre-planned routes and AR storytelling.
+                </p>
+                
+                <div className="space-y-3 mb-6">
+                  <div className="flex items-center gap-3 text-sm text-gray-400">
+                    <div className="w-2 h-2 bg-emerald-400 rounded-full"></div>
+                    <span>Group experience with expert guides</span>
+                  </div>
+                  <div className="flex items-center gap-3 text-sm text-gray-400">
+                    <div className="w-2 h-2 bg-emerald-400 rounded-full"></div>
+                    <span>Fixed routes with landmark highlights</span>
+                  </div>
+                  <div className="flex items-center gap-3 text-sm text-gray-400">
+                    <div className="w-2 h-2 bg-emerald-400 rounded-full"></div>
+                    <span>45-60 minute flights available daily</span>
+                  </div>
+                </div>
+
+                <div className="text-center py-4 border-t border-gray-700/50">
+                  <div className="text-2xl font-bold text-emerald-400 mb-1">From $299</div>
+                  <div className="text-gray-400 text-sm">per person</div>
+                </div>
+                
+                <div className="mt-6 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-300 text-center group-hover:shadow-lg group-hover:shadow-emerald-500/25">
+                  Book Scheduled Tour
+                </div>
+              </div>
+            </Link>
+
+            {/* Custom Tours */}
+            <Link href="/tours/custom_tours" className="group">
+              <div className="h-full bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-lg rounded-2xl p-8 border border-gray-700/50 hover:border-blue-500/50 transition-all duration-500 hover:scale-105 hover:shadow-2xl hover:shadow-blue-500/10">
+                <div className="w-16 h-16 bg-blue-500 rounded-2xl flex items-center justify-center mb-6 mx-auto group-hover:bg-blue-400 transition-colors duration-300">
+                  <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                  </svg>
+                </div>
+                <h3 className="text-2xl font-bold mb-4 text-blue-400 text-center group-hover:text-blue-300 transition-colors">Custom Tours</h3>
+                <p className="text-gray-300 text-center mb-6 leading-relaxed">
+                  Design your personalized flight route with AR experiences tailored to your interests. Private aircraft with flexible timing.
+                </p>
+                
+                <div className="space-y-3 mb-6">
+                  <div className="flex items-center gap-3 text-sm text-gray-400">
+                    <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
+                    <span>Private eVTOL with personal guide</span>
+                  </div>
+                  <div className="flex items-center gap-3 text-sm text-gray-400">
+                    <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
+                    <span>Choose your route and destinations</span>
+                  </div>
+                  <div className="flex items-center gap-3 text-sm text-gray-400">
+                    <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
+                    <span>30-90 minutes, flexible scheduling</span>
+                  </div>
+                </div>
+
+                <div className="text-center py-4 border-t border-gray-700/50">
+                  <div className="text-2xl font-bold text-blue-400 mb-1">From $599</div>
+                  <div className="text-gray-400 text-sm">per flight</div>
+                </div>
+                
+                <div className="mt-6 bg-blue-600 hover:bg-blue-500 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-300 text-center group-hover:shadow-lg group-hover:shadow-blue-500/25">
+                  Design Custom Tour
+                </div>
+              </div>
+            </Link>
+
+            {/* AR Demo */}
+            <Link href="/demo" className="group">
+              <div className="h-full bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-lg rounded-2xl p-8 border border-gray-700/50 hover:border-purple-500/50 transition-all duration-500 hover:scale-105 hover:shadow-2xl hover:shadow-purple-500/10">
+                <div className="w-16 h-16 bg-purple-500 rounded-2xl flex items-center justify-center mb-6 mx-auto group-hover:bg-purple-400 transition-colors duration-300">
+                  <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122" />
+                  </svg>
+                </div>
+                <h3 className="text-2xl font-bold mb-4 text-purple-400 text-center group-hover:text-purple-300 transition-colors">AR Technology Demo</h3>
+                <p className="text-gray-300 text-center mb-6 leading-relaxed">
+                  Experience our revolutionary AR windows before you fly. Interactive ground-based demonstration of all AR features.
+                </p>
+                
+                <div className="space-y-3 mb-6">
+                  <div className="flex items-center gap-3 text-sm text-gray-400">
+                    <div className="w-2 h-2 bg-purple-400 rounded-full"></div>
+                    <span>Interactive AR window simulation</span>
+                  </div>
+                  <div className="flex items-center gap-3 text-sm text-gray-400">
+                    <div className="w-2 h-2 bg-purple-400 rounded-full"></div>
+                    <span>No flight required, ground-based</span>
+                  </div>
+                  <div className="flex items-center gap-3 text-sm text-gray-400">
+                    <div className="w-2 h-2 bg-purple-400 rounded-full"></div>
+                    <span>15-20 minutes, walk-in available</span>
+                  </div>
+                </div>
+
+                <div className="text-center py-4 border-t border-gray-700/50">
+                  <div className="text-2xl font-bold text-purple-400 mb-1">Free</div>
+                  <div className="text-gray-400 text-sm">experience</div>
+                </div>
+                
+                <div className="mt-6 bg-purple-600 hover:bg-purple-500 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-300 text-center group-hover:shadow-lg group-hover:shadow-purple-500/25">
+                  Try AR Demo
+                </div>
+              </div>
+            </Link>
+          </div>
+
+          {/* Additional Information */}
+          <div className="bg-gradient-to-r from-gray-800/60 to-gray-900/60 backdrop-blur-lg rounded-2xl p-8 border border-gray-700/50 text-center">
+            <h3 className="text-2xl font-bold mb-6 text-emerald-400">Why Choose LiveAR Sky Tours?</h3>
+            <div className="grid md:grid-cols-4 gap-6 text-sm">
+              <div className="flex flex-col items-center">
+                <div className="text-3xl mb-3">�️</div>
+                <div className="text-emerald-400 font-semibold mb-2">Safety First</div>
+                <p className="text-gray-300">Certified pilots with extensive eVTOL experience</p>
+              </div>
+              <div className="flex flex-col items-center">
+                <div className="text-3xl mb-3">🔮</div>
+                <div className="text-emerald-400 font-semibold mb-2">AR Innovation</div>
+                <p className="text-gray-300">Revolutionary AR windows with immersive overlays</p>
+              </div>
+              <div className="flex flex-col items-center">
+                <div className="text-3xl mb-3">🌱</div>
+                <div className="text-emerald-400 font-semibold mb-2">Eco-Friendly</div>
+                <p className="text-gray-300">Zero emissions electric aircraft technology</p>
+              </div>
+              <div className="flex flex-col items-center">
+                <div className="text-3xl mb-3">🌆</div>
+                <div className="text-emerald-400 font-semibold mb-2">Low Altitude</div>
+                <p className="text-gray-300">Intimate city views at optimal flying heights</p>
+              </div>
             </div>
           </div>
         </div>
