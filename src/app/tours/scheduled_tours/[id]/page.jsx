@@ -594,7 +594,7 @@ export default function TourDetailPage({ params }) {
             {/* Close Button */}
             <div className="flex justify-end mb-3">
               <button
-                onClick={() => setShowSuccessDialog(false)}
+                onClick={() => router.push('/tours')}
                 className="text-gray-400 hover:text-white transition-colors"
               >
                 <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
