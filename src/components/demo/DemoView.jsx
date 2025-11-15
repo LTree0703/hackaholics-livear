@@ -8,7 +8,9 @@ export default function DemoView() {
     const [activeButton, setActiveButton] = useState("landmarks");
     const [currentTime, setCurrentTime] = useState(0);
     const [selectedPin, setSelectedPin] = useState(null);
+    const [isFullscreen, setIsFullscreen] = useState(false);
     const videoRef = useRef(null);
+    const containerRef = useRef(null);
 
     const landscapeTimestamps = [
         {
@@ -116,6 +118,33 @@ export default function DemoView() {
         setSelectedPin(null);
     };
 
+    const toggleFullscreen = async () => {
+        if (!document.fullscreenElement) {
+            try {
+                await containerRef.current.requestFullscreen();
+                setIsFullscreen(true);
+            } catch (error) {
+                console.error('Error entering fullscreen:', error);
+            }
+        } else {
+            try {
+                await document.exitFullscreen();
+                setIsFullscreen(false);
+            } catch (error) {
+                console.error('Error exiting fullscreen:', error);
+            }
+        }
+    };
+
+    useEffect(() => {
+        const handleFullscreenChange = () => {
+            setIsFullscreen(!!document.fullscreenElement);
+        };
+
+        document.addEventListener('fullscreenchange', handleFullscreenChange);
+        return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
+    }, []);
+
     useEffect(() => {
         const checkOrientation = () => {
             setIsLandscape(window.innerWidth > window.innerHeight);
@@ -175,7 +204,23 @@ export default function DemoView() {
     }
 
     return (
-        <div className="relative h-[calc(100vh-8rem)] overflow-hidden">
+        <div ref={containerRef} className="relative h-[calc(100vh-8rem)] overflow-hidden">
+            {/* Fullscreen Button */}
+            <button
+                onClick={toggleFullscreen}
+                className="absolute top-4 right-4 z-50 bg-black/50 text-white p-2 rounded-lg hover:bg-black/70 transition-colors"
+            >
+                {isFullscreen ? (
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                ) : (
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+                    </svg>
+                )}
+            </button>
+
             {/* Video Background Layer */}
             <video
                 ref={videoRef}
