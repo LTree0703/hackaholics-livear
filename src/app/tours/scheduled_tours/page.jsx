@@ -17,7 +17,7 @@ const scheduledTours = [
     price: 2299,
     totalSeats: 4,
     availableSeats: 2,
-    imageUrl: '/api/placeholder/400/250', // Placeholder for tour image
+    imageUrl: '/images/tours/scheduled/victoria-harbour-skyline.jpg',
     highlights: ['IFC Tower', 'Bank of China Tower', 'Peak Tram', 'Star Ferry Pier'],
     difficulty: 'Beginner',
     weather: 'Clear'
@@ -34,7 +34,7 @@ const scheduledTours = [
     price: 2699,
     totalSeats: 4,
     availableSeats: 1,
-    imageUrl: '/api/placeholder/400/250',
+    imageUrl: '/images/tours/scheduled/cultural-heritage-temple.jpg',
     highlights: ['Wong Tai Sin Temple', 'Man Mo Temple', 'Temple Street Night Market', 'Chi Lin Nunnery', 'Nan Lian Garden'],
     difficulty: 'Intermediate',
     weather: 'Partly Cloudy'
@@ -51,7 +51,7 @@ const scheduledTours = [
     price: 3099,
     totalSeats: 4,
     availableSeats: 3,
-    imageUrl: '/api/placeholder/400/250',
+    imageUrl: '/images/tours/scheduled/symphony-lights-sunset.jpg',
     highlights: ['Symphony of Lights', 'Hong Kong Island Skyline', 'Kowloon Waterfront', 'Clock Tower'],
     difficulty: 'Beginner',
     weather: 'Clear'
@@ -68,7 +68,7 @@ const scheduledTours = [
     price: 2549,
     totalSeats: 4,
     availableSeats: 4,
-    imageUrl: '/api/placeholder/400/250',
+    imageUrl: '/images/tours/scheduled/peak-midlevels-adventure.jpg',
     highlights: ['Victoria Peak', 'Sky Terrace 428', 'Mid-Levels Escalator', 'Lion Pavilion'],
     difficulty: 'Intermediate',
     weather: 'Clear'
@@ -85,7 +85,7 @@ const scheduledTours = [
     price: 2199,
     totalSeats: 4,
     availableSeats: 2,
-    imageUrl: '/api/placeholder/400/250',
+    imageUrl: '/images/tours/scheduled/new-territories-green.jpg',
     highlights: ['Shing Mun Reservoir', 'Ten Thousand Buddhas Monastery', 'Tai Po Market', 'Science Park'],
     difficulty: 'Beginner',
     weather: 'Clear'
@@ -102,7 +102,7 @@ const scheduledTours = [
     price: 2799,
     totalSeats: 4,
     availableSeats: 1,
-    imageUrl: '/api/placeholder/400/250',
+    imageUrl: '/images/tours/scheduled/neon-nights-street.jpg',
     highlights: ['Mong Kok Neon Signs', 'Ladies\' Market', 'Times Square', 'Lan Kwai Fong'],
     difficulty: 'Intermediate',
     weather: 'Clear'
@@ -367,13 +367,7 @@ export default function ScheduledToursPage() {
                     {/* Tour Image */}
                     <div className="lg:col-span-2 relative">
                       <div className="aspect-video bg-gradient-to-br from-emerald-500/20 to-blue-500/20 rounded-xl overflow-hidden border border-gray-600/50">
-                        {/* Placeholder for tour image */}
-                        <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-700/50 to-gray-800/50">
-                          <div className="text-center">
-                            <div className="text-4xl mb-2">🌆</div>
-                            <div className="text-gray-400 text-sm">Tour Preview</div>
-                          </div>
-                        </div>
+                        <img src={tour.imageUrl} alt={tour.title} className="w-full h-full object-cover" />
                         
                         {/* Overlay with key info */}
                         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
