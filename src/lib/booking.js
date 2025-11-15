@@ -3,10 +3,20 @@
 import { sql } from "./server.js";
 import { randomUUID } from "crypto";
 
-export async function createBooking(userId, tourId, numPeople) {
+export async function createBooking(userId, tourId, numPeople = 1) {
+  console.log("Creating booking for user:", userId, "and tour:", tourId);
+  if (!userId || !tourId) {
+    throw new Error("User ID and Tour ID are required");
+  }
+
   const id = randomUUID();
-  console.log("Generated Booking ID:", id);
-  await sql`INSERT INTO "Booking" (id, "userId", "tourId", "numPeople") VALUES (${id}, ${userId}, ${tourId}, ${numPeople})`;
+  console.log("Creating booking with ID:", id);
+
+  await sql`
+    INSERT INTO "Booking" (id, "userId", "tourId", "numPeople")
+    VALUES (${id}, ${userId}, ${tourId}, ${numPeople})
+  `;
+
   return id;
 }
 

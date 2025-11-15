@@ -67,6 +67,29 @@ export async function createTours(tourData) {
   }
 }
 
+export async function fetchTour(tourId) {
+  if (!tourId) {
+    throw new Error("Tour ID is required");
+  }
+  const tours = await sql`SELECT * FROM "Tour" WHERE id = ${tourId}`;
+  if (tours.length === 0) {
+    throw new Error(`Tour with ID ${tourId} not found`);
+  }
+
+  const tour = tours[0];
+
+  // Parse extendedDetails if it's a string
+  if (tour.extended_details && typeof tour.extended_details === "string") {
+    try {
+      tour.extended_details = JSON.parse(tour.extended_details);
+    } catch (e) {
+      console.error("Failed to parse extendedDetails:", e);
+    }
+  }
+
+  return tour;
+}
+
 export async function fetchTours() {
   const tours = await sql`SELECT * FROM "Tour"`;
   console.log(tours);
@@ -78,8 +101,24 @@ export async function deleteTour(tourId) {
   await sql`DELETE FROM "Tour" WHERE id = ${tourId}`;
 }
 
+export async function updateTour(tourId) {
+  if (!tourId) {
+    throw new Error("Tour ID is required");
+  }
+
+  // Only decrease if availableSeats > 0
+  await sql`
+    UPDATE "Tour" 
+    SET "availableSeats" = CASE 
+      WHEN "availableSeats" > 0 THEN "availableSeats" - 1 
+      ELSE "availableSeats" 
+    END
+    WHERE id = ${tourId}
+  `;
+}
+
 async function main() {
-  await createTours(tourData);
+  // await createTours(tourData);
 }
 
 main();
