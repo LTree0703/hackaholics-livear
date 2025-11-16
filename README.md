@@ -1,17 +1,33 @@
-# LiveAR Sky Tours (aura)
+# LiveAR Sky Tours
+
+*E212 Hackaholics - Cathay Hackathon 2025*
 
 A modern Next.js app for AR-enhanced low-altitude urban tours. The project demonstrates a small travel/tour booking platform focused on eVTOL/helipad-based experiences around Hong Kong, with a rich client UI, map components, Clerk authentication, and a Postgres/Neon backend accessed with serverless SQL and Prisma.
 
 This README documents how to run the project locally, apply database migrations, and the important architecture notes you need to understand and contribute.
 
+## Tech Stack
+
+- Framework: Next.js 16 (App Router) — `next@16.0.3`
+- UI: React 19 — `react@19.2.0`, `react-dom@19.2.0`
+- Styling: Tailwind CSS (via PostCSS) — `tailwindcss@^4`, `@tailwindcss/postcss`
+- Authentication: Clerk — `@clerk/nextjs@^6.35.1`
+- Database ORM: Prisma — `prisma@^6.19.0`, `@prisma/client@^6.19.0` (Prisma client is generated into `src/generated/prisma`)
+- Database & client: PostgreSQL (Neon compatible) via `@neondatabase/serverless@^1.0.2`, `pg@^8.16.3`, and `postgres@^3.4.7`
+- Maps: Leaflet (`leaflet@1.9.4`) + React bindings (`react-leaflet@^5.0.0`)
+- Utilities: `dotenv@^17.2.3`, `@paralleldrive/cuid2@^3.0.4`, `crypto`
+- Dev tooling: ESLint (`eslint@^9`), `eslint-config-next@16.0.3`, `prisma@^6.19.0`
+
+Recommended Node: 18+ (use the version you normally use for Next.js development)
+
 ## Quick overview
 
-- Next.js 16 (App Router)
+- Next.js App Router with server and client components
 - React 19
 - Tailwind CSS (via PostCSS)
-- Authentication: Clerk (@clerk/nextjs + @clerk/clerk-react)
-- Database: PostgreSQL (Neon compatible) via @neondatabase/serverless and Prisma ORM
-- Maps: Leaflet + react-leaflet (client-side only map component)
+- Clerk authentication
+- PostgreSQL (Neon compatible) via serverless client and Prisma
+- Leaflet-based client-side maps (dynamically loaded to avoid SSR issues)
 
 Key features implemented in this repo:
 
@@ -41,12 +57,12 @@ Environment
 
 Create a `.env.local` in the project root (Next.js standard). The project expects at least the following variables:
 
-- DATABASE_URL - Postgres connection string (Neon recommended for parity with production)
-- (Clerk) CLERK_FRONTEND_API, CLERK_PUBLISHABLE_KEY, CLERK_SECRET_KEY, NEXT_PUBLIC_CLERK_... — see Clerk docs for exact keys used by your integration
+- `DATABASE_URL` - Postgres connection string (Neon recommended for parity with production)
+- Clerk variables — e.g. `CLERK_FRONTEND_API`, `CLERK_PUBLISHABLE_KEY`, `CLERK_SECRET_KEY`, and any `NEXT_PUBLIC_` Clerk keys used by your integration. See Clerk docs for full details.
 
 Optional developer variables seen in the code/comments:
 
-- DATABASE_LOCATION - when set to `local` the Neon configuration in `src/lib/server.js` has commented guidance for local dev
+- `DATABASE_LOCATION` - when set to `local` the Neon configuration in `src/lib/server.js` has commented guidance for local dev
 
 Example `.env.local` (do NOT commit secrets):
 
@@ -60,7 +76,7 @@ CLERK_SECRET_KEY=sk_test_...
 
 Database setup
 
-This repository contains Prisma schema and migration files under `prisma/`.
+This repository contains a Prisma schema and migration files under `prisma/`.
 
 Apply migrations (production/CI):
 
@@ -112,7 +128,7 @@ Key npm scripts from `package.json`:
 
 Authentication
 
-The project is integrated with Clerk for authentication (`@clerk/nextjs` and `@clerk/clerk-react`). Clerk must be configured with your account keys. The app references the logged-in user and calls `getOrCreateUser` (in `src/lib/user.js`) to create a user record in the database if necessary.
+The project is integrated with Clerk for authentication (`@clerk/nextjs`). Clerk must be configured with your account keys. The app references the logged-in user and calls `getOrCreateUser` (in `src/lib/user.js`) to create a user record in the database if necessary.
 
 Maps and client-only components
 
